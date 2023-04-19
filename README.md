@@ -1,7 +1,7 @@
 # Abordagem de Modelo Fama e French 3- e 5-Fatores aplicado no Mercado de Ações Brasileiro. 
 
 ## Formalização do Problema:
-### Contexto
+### Contexto:
 A validade dos modelos de CAPM (Modelo de Precificação de ativos) proposto por Sharpe (1964) e Linter(1965) aplicados ao cenário de Finanças Moderno vem sofrendo bastante críticas, e vários modelos alternativos de precificação de ativos foram propostos. Esses modelos tentam capturar a relação risco retorno e explicar os dados de corte transversal da média dos retornos das ações. Entretanto, a maioria dos modelos não consegue ser capturar as relações corretas das anomalias nos testes empiricos.
 
 Trabalhos anteriores determinaram ,empiricamente, a significância estatística das variáveis:Tamanho  (*Market Capitalization*), *Book-to-Market* (*B/M*), Investimentos(*Capex*) e Lucro Operacional (*EBITDA)*. Banz (1981) encontrou relações do tamanho das empresas que indicam que empresas menores tendem a ter, na média, retornos maiores. Fama e French (1992) determinou o efeito do valor, representado pelo indicador *Book-to-Market*, e estabelece uma relação positiva entre essa variável e o retorno. Titman, Wei and Xie (2004) mostram que empresas que aumentam seus investimento em capital tendem a ter um retorno ajustado ao risco negativo no futuro.
@@ -12,15 +12,17 @@ Para determinar se as variáveis acima possuem fatores explicativos necessários
 Após 30 anos, o Modelo de 3 fatores tornou-se extremamente consolidado e ganhou muita atenção pela sua capacidade de gerar um retornos acumulados acima do que o tradicional CAPM gerava, para o mercado americano, principalmente no período de 1963-1993. Os autores encotraram um intercepto estatisticamente igual a zero para a regressão, usando os Fatores: Risco, Tamanho e Valor.
 
 Outros modelos surgiram com o passar dos anos, na medida que o tradicional FF3F perdia capacidade de explicar retornos e anomalias de Mercado. Assim os autores propuseram a abordagem de 5 Fatores (2014) que inclui as outras duas variáveis mencionadas acima (Investimento e Lucratividade). O modelo *FF5F* encontrou resultados superiores ao FF3F e soube capturar melhor a variação do retorno dos ativos e anomalias de mercado.
-### Problema
+### Problema:
 O problema envolve a avaliação desse modelo no cenário do Mercado de Ações brasileiro sob a perspectiva do retorno acumulado do portifólio selecionado (*Backtesting*), análise de *Drawdown* e *Sharpe*.Além disso, propor uma comparação do modelo atual de Regressão linear frente a uma alternativa de abordagem utilizando algoritmos de Machine Learning.
 
-##Objetivo
+## Objetivo:
+
 - implementar os modelos de FF5F e FF3F tradicionais com o conjunto de dados do Mercado brasileiro, e gerar as carteiras dentro dos períodos
 - Implementar os modelos FF5F e FF3F com o algoritmo de *Bayesian optimization-support vector regression* (BSVR)
 - Realizar o Backtesting, Análise de Sharpe e Drawndown para validar melhor estratégia aplicada ao cenário Brasileiro.
 
-##Revisão bibliográfica:
+## Revisão bibliográfica:
+
 ### Artigos
 Os seguintes artigos abordam problemas parecidos:
 - Fama, Eugene F. and French, Kenneth R., A Five-Factor Asset Pricing Model (September 2014). Fama-Miller Working Paper, Available at SSRN: https://ssrn.com/abstract=2287202 or http://dx.doi.org/10.2139/ssrn.2287202
@@ -36,7 +38,8 @@ https://link.springer.com/article/10.1007/s41464-020-00105-y#Abs1
 
 - Bui Thanh Khoa, Tran Trong Huynh, "Long Short-Term Memory Recurrent Neural Network for Predicting the Return of Rate Underframe the Fama-French 5 Factor", Discrete Dynamics in Nature and Society, vol. 2022, Article ID 3936122, 8 pages, 2022. https://doi.org/10.1155/2022/3936122
 
-- https://medium.com/the-handbook-of-coding-in-finance/estimating-stock-returns-with-fama-french-three-factor-model-in-python-1a98e3936859
+
+- Banz, R. (1981). The relationship between return and market value of common stocks. Journal of Financial Economics, 9(1), 3-18. https://doi.org/10.1016/0304-405X(81)90018-0
 
 ### Repositórios:
 - https://github.com/omartinsky/FamaFrench
@@ -45,6 +48,34 @@ https://link.springer.com/article/10.1007/s41464-020-00105-y#Abs1
 
 - https://github.com/teal0range/FF5
 
+- https://medium.com/the-handbook-of-coding-in-finance/estimating-stock-returns-with-fama-french-three-factor-model-in-python-1a98e3936859
+
 ## Base de Dados:
 A Base de Dados utilizada foi provida pela ComDinheiro, contendo as Ações do índice IBOV (*Data-Ação-Abertura-Alto-Baixo-Fechamento-Volume*).
 As variáveis necessárias para cálcular os modelos trádicionais de Fatores.
+
+
+## Operacionalização das Variáveis Financeiras:
+
+![](./img/Finance_var.png)
+
+**Fonte**: https://periodicos.ufsc.br/index.php/contabilidade/article/view/78962
+
+
+## Operacionalização dos Fatores:
+![](./img/Factor_var.png)
+
+**Fonte**: https://periodicos.ufsc.br/index.php/contabilidade/article/view/78962
+
+
+
+## Escolha dos Portifólios:
+
+As varíaveis dependentes do modelo (lado esquerdo) representam os excessos de retorno que o modelo gera frente a uma taxa livre de Risco (cuja refência utilizada foi o CDI). Os portifólios foram escolhidos a partir do ordenamento das ações anualmente em 5 quintis seguindo os critérios de classificação por Tamanho (Size) e em seguida cada um desses quintis foi ordenado seguindo uma segunda variável financeira. 
+
+Dessa forma, os portifólios gerados tiveram os seguintes critérios de seleção:
+1. Tamanho e Índice *Book-to-Market*;
+2. Tamanho e Lucratividade;
+3. Tamanho e Investimento;
+
+Portanto, para cada um dos critérios foram gerados 25 portfólios.
