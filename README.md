@@ -54,6 +54,27 @@ https://link.springer.com/article/10.1007/s41464-020-00105-y#Abs1
 A Base de Dados utilizada foi provida pela ComDinheiro, contendo as Ações do índice IBOV (*Data-Ação-Abertura-Alto-Baixo-Fechamento-Volume*).
 As variáveis necessárias para cálcular os modelos trádicionais de Fatores.
 
+# Fama French
+
+
+
+
+$r = R_f +b_m \cdot MER + b_s \cdot SMB + b_v \cdot HML + b_p \cdot RMW + b_i \cdot CMA$
+
+$r$ is expected portifolio return
+$b_m,b_s,b_v,b_p,b_i$ are factor sensitivities.
+
+## Factors Analysis
+- *MER*: excess return of a broad market over the risk-free rate ($ R_m−R_f $ ) (market factor) 
+- *SMB* : average return on the small stock portfolios minus big stock portfolios (size factor).
+
+- *HML*: average return on high book value portfolios minus low book value (value factor).
+- *RMW* : the average return on robust minus weak operating profitability portfolios (profitability factor).
+
+- *CMA* : Conservative minus aggresive investments, proxied by the y/y growth in company asset value (investment factor).
+
+Definitions: https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/Data_Library/f-f_5_factors_2x3.html
+
 
 ## Operacionalização das Variáveis Financeiras:
 
