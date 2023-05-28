@@ -188,3 +188,15 @@ def trade_evaluation(signals_df):
     # Print the DataFrame
     return trade_evaluation_df
 
+# Define function that plots Algo Cumulative Returns vs. Underlying Cumulative Returns:
+def underlying_returns(signals_df):
+    underlying=pd.DataFrame()
+    underlying["Close"]=signals_df["Close"]
+    underlying["Underlying Daily Returns"]=underlying["Close"].pct_change()
+    underlying["Underlying Daily Returns"].fillna(0,inplace=True)
+    underlying['Underlying Cumulative Returns']=(1 + underlying['Underlying Daily Returns']).cumprod() - 1
+    underlying['Algo Cumulative Returns']=signals_df["Portfolio Cumulative Returns"]
+
+    graph_df=underlying[["Underlying Cumulative Returns", "Algo Cumulative Returns"]]
+
+    return graph_df
