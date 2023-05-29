@@ -1,5 +1,42 @@
 import pandas as pd
 import numpy as np
+def build_factors_frame():
+    """
+    Creating a dataframe with all factors. Concatenating all factors.
+    Date is the index.
+    Creating a csv file with all factors.
+    return: factors dataframe
+    """
+    # Rm - Market Factor
+    MKT = pd.read_excel("../data/risk_factors/Market_Factor.xls",index_col=None)
+
+    # High minus low - Value Factor
+    HML = pd.read_excel("../data/risk_factors/HML_Factor.xls",index_col=None)
+
+    # Illiquid Minus Liquid - Liquidity Factor
+    IML = pd.read_excel("../data/risk_factors/IML_Factor.xls",index_col=None)
+
+    #Small minus big - Size Factor
+    SMB = pd.read_excel("../data/risk_factors/SMB_Factor.xls",index_col=None)
+
+    #Winners Minus Loser - Momentum Factor
+    WML = pd.read_excel("../data/risk_factors/WML_Factor.xls",index_col=None)
+
+    # Daily Risk Free - Rf
+    RF = pd.read_excel("../data/risk_factors/Risk_Free.xls", index_col = None)
+    # Pre-processing:
+    HML = pre_processing(HML)
+    MKT = pre_processing(MKT)
+    IML = pre_processing(IML)
+    SMB = pre_processing(SMB)
+    WML = pre_processing(WML)
+    RF = pre_processing(RF)
+    # Concatenate all factors:
+    factors = pd.concat([MKT,HML,IML,SMB,WML,RF],axis=1)
+    # Save to csv:
+    factors.to_csv("../data/risk_factors/factors.csv",index=True)
+    return factors
+
 def pre_processing(df):
     """
     input: dataframe
