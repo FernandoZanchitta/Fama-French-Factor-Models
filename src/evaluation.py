@@ -27,7 +27,7 @@ def generate_signals(input_df, start_capital=100000, share_count=2000):
     an arbitrary start capital and a fixed number of shares traded each operation.
     output: dataframe.
     """
-    # Set initial capital:
+# Set initial capital:
     initial_capital = float(start_capital)
 
     signals_df = input_df.copy()
@@ -35,43 +35,32 @@ def generate_signals(input_df, start_capital=100000, share_count=2000):
     # Set the share size:
     share_size = share_count
 
-    # Take a 500 share position where the Buy Signal is 1 (prior day's
-    #  predictions greater than prior day's returns):
-    signals_df["Position"] = share_size * signals_df["Buy Signal"]
+    # Take a 500 share position where the Buy Signal is 1 
+    # (prior day's predictions greater than prior day's returns):
+    signals_df['Position'] = share_size * signals_df['Buy Signal']
 
     # Make Entry / Exit Column:
-    signals_df["Entry/Exit"] = signals_df["Buy Signal"].diff()
+    signals_df['Entry/Exit']=signals_df["Buy Signal"].diff()
 
     # Find the points in time where a 500 share position is bought or sold:
-    signals_df["Entry/Exit Position"] = signals_df["Position"].diff()
+    signals_df['Entry/Exit Position'] = signals_df['Position'].diff()
 
     # Multiply share price by entry/exit positions and get the cumulative sum:
-    signals_df["Portfolio Holdings"] = (
-        signals_df["Close"] * signals_df["Entry/Exit Position"].cumsum()
-    )
+    signals_df['Portfolio Holdings'] = signals_df['Close'] * signals_df['Entry/Exit Position'].cumsum()
 
-    # Subtract the initial capital by the portfolio holdings to get the
-    #  amount of liquid cash in the portfolio:
-    signals_df["Portfolio Cash"] = (
-        initial_capital
-        - (signals_df["Close"] * signals_df["Entry/Exit Position"]).cumsum()
-    )
+    # Subtract the initial capital by the portfolio holdings to get the amount of liquid cash in the portfolio:
+    signals_df['Portfolio Cash'] = initial_capital - (signals_df['Close'] * signals_df['Entry/Exit Position']).cumsum()
 
-    # Get the total portfolio value by adding the cash amount by
-    #  the portfolio holdings (or investments):
-    signals_df["Portfolio Total"] = (
-        signals_df["Portfolio Cash"] + signals_df["Portfolio Holdings"]
-    )
+    # Get the total portfolio value by adding the cash amount by the portfolio holdings (or investments):
+    signals_df['Portfolio Total'] = signals_df['Portfolio Cash'] + signals_df['Portfolio Holdings']
 
     # Calculate the portfolio daily returns:
-    signals_df["Portfolio Daily Returns"] = signals_df["Portfolio Total"].pct_change()
+    signals_df['Portfolio Daily Returns'] = signals_df['Portfolio Total'].pct_change()
 
     # Calculate the cumulative returns:
-    signals_df["Portfolio Cumulative Returns"] = (
-        1 + signals_df["Portfolio Daily Returns"]
-    ).cumprod() - 1
+    signals_df['Portfolio Cumulative Returns'] = (1 + signals_df['Portfolio Daily Returns']).cumprod() - 1
 
-    signals_df = signals_df.dropna()
+    # signals_df = signals_df.dropna()
 
     return signals_df
 
@@ -138,7 +127,9 @@ def underlying_evaluation(signals_df):
     """
     underlying = pd.DataFrame()
     underlying["Close"] = signals_df["Close"]
-    underlying["Portfolio Daily Returns"] = underlying["Close"].pct_change()
+    # underlying["Portfolio Daily Returns"] = underlying["Close"].pct_change()
+    underlying["Portfolio Daily Returns"] = signals_df["Returns"]
+
     # in case of error:
     # underlying["Portfolio Daily Returns"].fillna(0, inplace=True)
     underlying["Portfolio Daily Returns"].fillna(0)

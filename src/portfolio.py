@@ -187,3 +187,61 @@ def split_data(data, rate=0.8):
     y_test = y[split:]
     close_test = data["Close"][split:]
     return x_train, x_test, y_train, y_test, close_test
+
+class Portifolio:
+    def __init__(self,dataframe):
+        """
+        initialize the portfolio class.
+
+        Dataframe is gattered from the api_comdinheiro functions.
+        """
+        #check if column names are correct:
+        if "date" not in dataframe.columns:
+            raise ValueError("date column not found")
+        if "closed_price" not in dataframe.columns:
+            raise ValueError("closed_price column not found")
+        if "ticker" not in dataframe.columns:
+            raise ValueError("ticker column not found")
+        if "fator_cotacao" not in dataframe.columns:
+            raise ValueError("fator_cotacao column not found")
+        if "qnt" not in dataframe.columns:
+            raise ValueError("qnt column not found")
+        if "ret12m" not in dataframe.columns:
+            raise ValueError("ret12m column not found")
+        if "VM" not in dataframe.columns:
+            dataframe['VM'] = dataframe["closed_price"] * dataframe["fator_cotacao"]* dataframe["qnt"]
+        self.dataframe = dataframe
+    def build_momentum_portfolio(self):
+        """
+        momentum portfolio.
+
+        Generate a momentum portfolio based on the 8 stocks with the highest returns in the last 12 months.
+
+        Returns a dataframe of returns, with all stocks equally weighted.
+        """
+        self.momentum = self.dataframe.groupby('date').apply(lambda x: x.nlargest(8, 'ret12m')).reset_index(drop=True)
+        return self.momentum.groupby('date')["closed_price"].mean().reset_index(drop=True)
+
+    def build_size_portfolio(self):
+        """
+        small and big portfolio.
+
+        Generate a size portfolio based on the 8 stocks with the highest market cap in the last 12 months.
+
+        Returns a dataframe 
+        """
+        self.size_big = ibov.groupby('date').apply(lambda x: x.nlargest(8, 'VM')).reset_index(drop=True)
+        self.size_small = ibov.groupby('date').apply(lambda x: x.nsmallest(8, 'VM')).reset_index(drop=True)
+
+        return self.size_small.groupby('date')["closed_price"].mean().reset_index(drop=True)
+    def build_value_portfolio(self):
+        """
+        book-to-market portfolio.
+
+        Generate a book-to-market portfolio based on the 8 stocks with the highest book-to-market in the last 12 months.
+
+        Returns a dataframe grouped by date, with all stocks equally weighted.
+        """
+        self.dataframe["B/M"] = self.dataframe["VM"] / self.dataframe["PL"]
+        self.value = self.dataframe.groupby('date').apply(lambda x: x.nsmallest(8, 'B/M')).reset_index(drop=True)
+        return self.value.groupby('date')["closed_price"].mean().reset_index(drop=True)
