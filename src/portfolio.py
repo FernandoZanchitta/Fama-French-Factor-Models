@@ -22,7 +22,7 @@ split_data:
 import numpy as np
 import pandas as pd
 import seaborn as sns
-
+import os
 
 def build_factors_frame():
     """Creating a dataframe with all factors. Concatenating all factors.
@@ -96,9 +96,17 @@ def choose_stock(ticker):
     'vol_em_aluguel(mm_r$)': Volume in millions of R$ in short position,
     output:dataframe.
     """
+    file_path = f"../data/stocks/{ticker}.csv"
+    #verifu if file_path exists:
+    if os.path.exists(file_path):
+        stock = pd.read_csv(file_path, index_col=None)
+    else:
+        print("File not found")
+        return pd.DataFrame()
+
     stock = pd.read_csv(f"../data/stocks/{ticker}.csv", index_col=None)
     # Convert datetime column to desired format
-    print(stock.columns)
+    # print(stock.columns)
     stock = stock.rename(columns={"data": "date"})
     stock["date"] = pd.to_datetime(stock["date"], format="%d/%m/%Y")
     stock["date"] = stock["date"].dt.strftime("%Y/%m/%d")
