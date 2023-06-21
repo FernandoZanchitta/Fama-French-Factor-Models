@@ -30,7 +30,8 @@ def get_ibov(datas_de_analise):
         # separar para encaixar no payload: Formato 3D28%2F12%2F2000 para 28/12/2000:
         data = data.replace("/", "%2F")
 
-        payload = f"username=aluno.fernando.zanchitta&password=nifmod-cyjzov-wYnva4&URL=StockScreenerFull.php%3F%26relat%3D%26data_analise%3D{data}%26data_dem%3D31%2F12%2F9999%26variaveis%3DTICKER%2BNOME_EMPRESA%2Bdata_analise%2BPL%2BQUANT_ON_PN%2BEBIT%2BPRECO%2BAT%2BFATOR_COTACAO%2Bret_12m%2Bret_06m%2Bret_03m%2Bret_01m%26segmento%3Dtodos%26setor%3Dtodos%26filtro%3DPESO_INDICE%28participacao%2CIBOVESPA%2C%2C30%2C%29%253E0%26demonstracao%3Dconsolidado%2520preferencialmente%26convencao%3DMIXED%26acumular%3D12%26valores_em%3D1%26num_casas%3D2%26salve%3D%26salve_obs%3D%26opcao_salvar%3Dnenhum%26opcao_portfolio%3Dquantidade%26opcao_serie%3Dcash%26indicador_pesos_portfolio%3D%26data_analise_portfolio%3D18%2F04%2F2023%26var_control%3D0%26overwrite%3D0%26setor_bov%3Dtodos%26subsetor_bov%3Dtodos%26subsubsetor_bov%3Dtodos%26group_by%3D%26relat_alias_automatico%3Dcmd_alias_01%26primeira_coluna_ticker%3D0%26periodos%3D0%26periodicidade%3Danual_02%26formato_data%3D1%26tipo_on_pn%3DON%2BPN%2BUNT%26tipo_listagem%3Dlistada_em_bolsa%26casos_especiais_01%3Dnenhum%26casos_especiais_02%3Dapenas_tickers_ativos%2Bapenas_empr%26pais_origem%3DBR%26exchange%3DB3%26limit_01%3D%26order_by%3D%26moeda%3DMOEDA_ORIGINAL%26nome_serie%3D%26republicacoes%3D0%26linppag%3D50&format=json2"
+        # payload = f"username=aluno.fernando.zanchitta&password=nifmod-cyjzov-wYnva4&URL=StockScreenerFull.php%3F%26relat%3D%26data_analise%3D{data}%26data_dem%3D31%2F12%2F9999%26variaveis%3DTICKER%2BNOME_EMPRESA%2Bdata_analise%2BPL%2BQUANT_ON_PN%2BEBIT%2BPRECO%2BAT%2BFATOR_COTACAO%2Bret_12m%2B%2Bret_06m%2Bret_03m%2Bret_01m%2BLC%2Bvol_ano_48m%2Bvol_ano_36m%2Bvol_ano_24m%2Bvol_ano_12m%2Bvol_ano_06m%2Bvol_ano_03m%2Bvol_ano_01m%2BEV%2BMARKET_VALUE%26segmento%3Dtodos%26setor%3Dtodos%26filtro%3DPESO_INDICE%28participacao%2CIBOVESPA%2C%2C30%2C%29%253E0%26demonstracao%3Dconsolidado%2520preferencialmente%26convencao%3DMIXED%26acumular%3D12%26valores_em%3D1%26num_casas%3D2%26salve%3D%26salve_obs%3D%26opcao_salvar%3Dnenhum%26opcao_portfolio%3Dquantidade%26opcao_serie%3Dcash%26indicador_pesos_portfolio%3D%26data_analise_portfolio%3D18%2F04%2F2023%26var_control%3D0%26overwrite%3D0%26setor_bov%3Dtodos%26subsetor_bov%3Dtodos%26subsubsetor_bov%3Dtodos%26group_by%3D%26relat_alias_automatico%3Dcmd_alias_01%26primeira_coluna_ticker%3D0%26periodos%3D22%26periodicidade%3Danual_02%26formato_data%3D1%26tipo_on_pn%3DON%2BPN%2BUNT%26tipo_listagem%3Dlistada_em_bolsa%26casos_especiais_01%3Dnenhum%26casos_especiais_02%3Dapenas_ticke%26pais_origem%3DBR%26exchange%3DB3%26limit_01%3D%26order_by%3D%26moeda%3DMOEDA_ORIGINAL%26nome_serie%3D%26republicacoes%3D0%26linppag%3D50&format=json2"
+        payload = f"username=aluno.fernando.zanchitta&password=nifmod-cyjzov-wYnva4&URL=StockScreenerFull.php%3F%26relat%3D%26data_analise%3D{data}%26data_dem%3D31%2F12%2F9999%26variaveis%3DTICKER%2BNOME_EMPRESA%2Bdata_analise%2BPL%2BQUANT_ON_PN%2BEBIT%2BPRECO%2BAT%2BFATOR_COTACAO%2Bret_12m%2Bret_06m%2Bret_03m%2Bret_01m%2BLC%2Bvol_ano_12m%2Bvol_ano_06m%2Bvol_ano_03m%2Bvol_ano_01m%2BEV%2BMARKET_VALUE%26segmento%3Dtodos%26setor%3Dtodos%26filtro%3DPESO_INDICE%28participacao%2CIBOVESPA%2C%2C30%2C%29%253E0%26demonstracao%3Dconsolidado%2520preferencialmente%26convencao%3DMIXED%26acumular%3D12%26valores_em%3D1%26num_casas%3D2%26salve%3D%26salve_obs%3D%26opcao_salvar%3Dnenhum%26opcao_portfolio%3Dquantidade%26opcao_serie%3Dcash%26indicador_pesos_portfolio%3D%26data_analise_portfolio%3D18%2F04%2F2023%26var_control%3D0%26overwrite%3D0%26setor_bov%3Dtodos%26subsetor_bov%3Dtodos%26subsubsetor_bov%3Dtodos%26group_by%3D%26relat_alias_automatico%3Dcmd_alias_01%26primeira_coluna_ticker%3D0%26periodos%3D0%26periodicidade%3Danual_02%26formato_data%3D1%26tipo_on_pn%3DON%2BPN%2BUNT%26tipo_listagem%3Dlistada_em_bolsa%26casos_especiais_01%3Dnenhum%26casos_especiais_02%3Dapenas_ticke%26pais_origem%3DBR%26exchange%3DB3%26limit_01%3D%26order_by%3D%26moeda%3DMOEDA_ORIGINAL%26nome_serie%3D%26republicacoes%3D0%26linppag%3D50&format=json2"
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
         try:
             response = requests.request(
@@ -43,14 +44,14 @@ def get_ibov(datas_de_analise):
         except requests.exceptions.RequestException as e:
             raise SystemExit(e)
         dict = json.loads(response.text)
-        # print(response.text)
+        print(response.text)
         ibov_this_date = pd.DataFrame(dict["resposta"]["tab-p0"]["linha"])
         ibov_list.append(ibov_this_date)
 
     # Concatenate all dataframes in the list
     ibov = pd.concat(ibov_list, axis=0)
     # Save the dataframe as a csv file
-    ibov.to_csv("data/IBOV.csv", index=False)
+    ibov.to_csv("../data/ibov_universe.csv", index=False)
     return ibov
 
 
@@ -140,3 +141,27 @@ def get_multiple_stocks(tickers, data_inicio, data_fim):
     df.to_csv(f"../../data/stocks/{ticker}.csv", index=False)
     # Obs.: Sustituir ["chave"] pela chave correspondente
     return df
+
+
+
+# import requests
+
+# url = "https://www.comdinheiro.com.br/Clientes/API/EndPoint001.php"
+
+# querystring = {"code":"import_data"}
+
+
+# headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+
+# response = requests.request("POST", url, data=payload, headers=headers, params=querystring)
+
+# print(response.text)
+
+# #Para transformar a saída da API em dataframe
+# #importar as biblioteca de json e pandas conforme abaixo
+# #import pandas as pd
+# #import json
+# #Acrescentar as seguintes linhas no final do script
+# #dict = json.loads(response.text)
+# #df   = pd.DataFrame(dict["chave"])
+# #Obs.: Sustituir ["chave"] pela chave correspondente
