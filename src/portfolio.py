@@ -60,7 +60,6 @@ def build_factors_frame():
     factors.to_csv("../data/risk_factors/factors.csv", index=True)
     return factors
 
-
 def pre_processing(raw_factor):
     """Steps made before the data is ready to be consumed.
     No calculation or transformation is made.
@@ -75,7 +74,6 @@ def pre_processing(raw_factor):
     raw_factor = raw_factor.drop(["year", "month", "day"], axis=1)
     raw_factor = raw_factor.set_index("date")
     return raw_factor
-
 
 def choose_stock(ticker):
     """input:str,str.
@@ -132,7 +130,6 @@ def choose_stock(ticker):
     stock = stock.set_index("date")
     return stock
 
-
 def process_stock(frame):
     """Process the stock dataframe to be ready to be consumed.
     input:dataframe
@@ -147,13 +144,11 @@ def process_stock(frame):
     frame = frame.dropna()
     return frame
 
-
 def analyse_stock(stock_data):
     """input: Dataframe.
     output:None, Stdout: Multiple Plots.
     """
     sns.lineplot(data=stock_data, x="Data", y="Returns")
-
 
 def merge_portifolio(portfolio, factors):
     """input: dataframe,dataframe.
@@ -167,7 +162,6 @@ def merge_portifolio(portfolio, factors):
     combined_df = combined_df.rename(columns={"Rm_minus_Rf": "mkt-rf"})
     return combined_df
 
-
 def portfolio_build():
     """Future work.
     Build a portfolio based on the stocks that are in the
@@ -175,7 +169,6 @@ def portfolio_build():
     input:None
     output:None
     """
-
 
 def split_data(data, rate=0.8):
     """input: dataframe, float.
@@ -204,21 +197,57 @@ class Portifolio:
         Dataframe is gattered from the api_comdinheiro functions.
         """
         #check if column names are correct:
-        if "date" not in dataframe.columns:
-            raise ValueError("date column not found")
-        if "closed_price" not in dataframe.columns:
-            raise ValueError("closed_price column not found")
-        if "ticker" not in dataframe.columns:
-            raise ValueError("ticker column not found")
-        if "fator_cotacao" not in dataframe.columns:
-            raise ValueError("fator_cotacao column not found")
-        if "qnt" not in dataframe.columns:
-            raise ValueError("qnt column not found")
-        if "ret12m" not in dataframe.columns:
-            raise ValueError("ret12m column not found")
-        if "VM" not in dataframe.columns:
-            dataframe['VM'] = dataframe["closed_price"] * dataframe["fator_cotacao"]* dataframe["qnt"]
-        self.dataframe = dataframe
+        # columns need to be: ['ticker', 'nome_da_empresa', 'data_da_analise', 'patrimonio_liquido','quant_on_pn','ebit12_meses', 'preco_de_fechamento', 'ativo_total','fator_cotacao', 'retorno12_meses', 'retorno6_meses','retorno3_meses','retorno1_mes', 'lc', 'volatilidade_anualizada12_meses','volatilidade_anualizada6_meses','volatilidade_anualizada3_meses','volatilidade_anualizada1_mes', 'ev', 'valor_de_mercado']  
+        self.frame = dataframe
+    def pre_processing(self):
+        """""
+        Preprocess the frame to enable the analysis.
+
+        change the columns types and names.
+        also fill the missing values with 0
+
+        """
+
+        self.frame['data_da_analise'] = pd.to_datetime(self.frame['data_da_analise'])
+        self.frame['ticker'] = self.frame['ticker'].astype(str)
+        #renomear as colunas:
+        self.frame = self.frame.rename(columns={
+            'data_da_analise':'date',
+            'patrimonio_liquido':'net_worth',
+            'quant_on_pn':'qnt',
+            "retorno12_meses":"ret12m",
+            "retorno6_meses":"ret6m",
+            "retorno3_meses":"ret3m",
+            "retorno1_mes":"ret1m",
+            "ebit12_meses":"ebit12m",
+            "nome_da_empresa":"name",
+            "volatilidade_anualizada12_meses":"vol12m",
+            "volatilidade_anualizada6_meses":"vol6m",
+            "volatilidade_anualizada3_meses":"vol3m",
+            "volatilidade_anualizada1_mes":"vol1m",
+            "valor_de_mercado":"mkt_value",
+            "lc":"liq_corr",
+            "ev":"entreprise_value",
+            "preco_de_fechamento":"closed_price"})
+
+        # transforma valores [] em NaN:
+        self.frame = self.frame.replace('[]',np.nan)
+        # Remove commas from numeric columns and convert them to numeric values
+        self.numeric_columns = ['net_worth', 'qnt', 'ret12m','ret6m','ret3m',
+                                'ret1m',
+                                 'closed_price', 'ebit12m', 'fator_cotacao',
+                                 'ativo_total',
+                                 'vol12m','vol6m','vol3m','vol1m','mkt_value',
+                                 'liq_corr','entreprise_value']
+        for column in self.numeric_columns:
+            if self.frame[column].dtype == 'object':
+                self.frame[column] = self.frame[column].str.replace(',', '.').astype(float)
+        #replace NaNs with 0:
+        #remover 'date' = 2005-12-29 'ticker': 'ARCE3' -> due to outlier from data provider:
+        self.frame = self.frame.loc[~((self.frame['date'] == '2005-12-29') & (self.frame['ticker'] == 'ARCE3'))]
+        self.frame = self.frame.loc[~((self.frame['date'] == '2004-12-30') & (self.frame['ticker'] == 'ACES4'))]
+        self.frame = self.frame.fillna(0)
+        return self.frame
     def build_momentum_portfolio(self):
         """
         momentum portfolio.
@@ -227,7 +256,7 @@ class Portifolio:
 
         Returns a dataframe of returns, with all stocks equally weighted.
         """
-        self.momentum = self.dataframe.groupby('date').apply(lambda x: x.nlargest(8, 'ret12m')).reset_index(drop=True)
+        self.momentum = self.frame.groupby('date').apply(lambda x: x.nlargest(8, 'ret12m')).reset_index(drop=True)
         return self.momentum.groupby('date')["closed_price"].mean().reset_index(drop=True)
 
     def build_size_portfolio(self):
@@ -238,8 +267,8 @@ class Portifolio:
 
         Returns a dataframe 
         """
-        self.size_big = ibov.groupby('date').apply(lambda x: x.nlargest(8, 'VM')).reset_index(drop=True)
-        self.size_small = ibov.groupby('date').apply(lambda x: x.nsmallest(8, 'VM')).reset_index(drop=True)
+        self.size_big = self.frame.groupby('date').apply(lambda x: x.nlargest(8, 'VM')).reset_index(drop=True)
+        self.size_small = self.frame.groupby('date').apply(lambda x: x.nsmallest(8, 'VM')).reset_index(drop=True)
 
         return self.size_small.groupby('date')["closed_price"].mean().reset_index(drop=True)
     def build_value_portfolio(self):
@@ -250,6 +279,6 @@ class Portifolio:
 
         Returns a dataframe grouped by date, with all stocks equally weighted.
         """
-        self.dataframe["B/M"] = self.dataframe["VM"] / self.dataframe["PL"]
-        self.value = self.dataframe.groupby('date').apply(lambda x: x.nsmallest(8, 'B/M')).reset_index(drop=True)
+        self.frame["B/M"] = self.frame["VM"] / self.frame["PL"]
+        self.value = self.frame.groupby('date').apply(lambda x: x.nsmallest(8, 'B/M')).reset_index(drop=True)
         return self.value.groupby('date')["closed_price"].mean().reset_index(drop=True)
